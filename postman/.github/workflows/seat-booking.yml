@@ -1,1 +1,25 @@
 
+name: Seat Booking Scheduler
+
+on:
+  schedule:
+    - cron: '30 18 * * 0-4'   # 12:00 AM IST (Mon-Fri)
+  workflow_dispatch:
+
+jobs:
+  run-booking:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Run Seat Booking Collection
+        run: |
+          newman run postman/SeatBookingCollection.json \
+          --env-var "USERNAME=${{ secrets.USERNAME }}" \
+          --env-var "PASSWORD=${{ secrets.PASSWORD }}" \
+          --reporters cli
